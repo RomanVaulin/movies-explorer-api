@@ -60,7 +60,9 @@ module.exports.editUserData = (req, res, next) => {
     .orFail()
     .then((user) => res.status(httpConstants.HTTP_STATUS_OK).send(user))
     .catch((err) => {
-      if (err instanceof mongoose.Error.ValidationError) {
+      if (err.code === 11000) {
+        next(new ConflictError(`Пользователь с email: ${email} уже зарегистрирован`));
+      } else if (err instanceof mongoose.Error.ValidationError) {
         next(new BadRequestError(err.message));
       } else if (err instanceof mongoose.Error.DocumentNotFoundError) {
         next(new NotFoundError('Пользователь по указанному _id не найден'));

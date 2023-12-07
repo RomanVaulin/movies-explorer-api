@@ -56,8 +56,8 @@ module.exports.addMovie = (req, res, next) => {
 };
 
 module.exports.getMovies = (req, res, next) => {
-  Movie.find({})
-    .populate(['owner'])
+  const owner = req.user_id;
+  Movie.find({ owner })
     .then((movies) => res.status(httpConstants.HTTP_STATUS_OK).send(movies))
     .catch(next);
 };
