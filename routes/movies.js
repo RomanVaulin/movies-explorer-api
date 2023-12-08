@@ -5,14 +5,6 @@ const {
   addMovie, getMovies, deleteMovie,
 } = require('../controllers/movies');
 
-router.get('/', getMovies);
-
-router.delete('/:movieId', celebrate({
-  params: Joi.object().keys({
-    movieId: Joi.string().length(24).hex().required(),
-  }),
-}), deleteMovie);
-
 router.post('/', celebrate({
   body: Joi.object().keys({
     country: Joi.string().required(),
@@ -28,5 +20,13 @@ router.post('/', celebrate({
     nameEN: Joi.string().required(),
   }),
 }), addMovie);
+
+router.delete('/:movieId', celebrate({
+  params: Joi.object().keys({
+    movieId: Joi.string().length(24).hex().required(),
+  }),
+}), deleteMovie);
+
+router.get('/', getMovies);
 
 module.exports = router;

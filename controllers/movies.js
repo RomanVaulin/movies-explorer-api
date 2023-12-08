@@ -34,17 +34,7 @@ module.exports.addMovie = (req, res, next) => {
     owner: req.user._id,
   })
     .then((movie) => {
-      Movie.findById(movie._id)
-        .orFail()
-        .populate('owner')
-        .then((data) => res.status(httpConstants.HTTP_STATUS_CREATED).send(data))
-        .catch((err) => {
-          if (err instanceof mongoose.Error.DocumentNotFoundError) {
-            next(new NotFoundError('Фильм с указаным _id не найден'));
-          } else {
-            next(err);
-          }
-        });
+      res.status(httpConstants.HTTP_STATUS_CREATED).send(movie);
     })
     .catch((err) => {
       if (err instanceof mongoose.Error.ValidationError) {
@@ -56,7 +46,7 @@ module.exports.addMovie = (req, res, next) => {
 };
 
 module.exports.getMovies = (req, res, next) => {
-  const owner = req.user_id;
+  const owner = req.user._id;
   Movie.find({ owner })
     .then((movies) => res.status(httpConstants.HTTP_STATUS_OK).send(movies))
     .catch(next);
